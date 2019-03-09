@@ -2,13 +2,20 @@
 extern crate serde_derive;
 
 mod errors;
+mod hooks;
+mod opt;
 mod settings;
 
-use app_dirs::*;
-use errors::EnvyError;
-use settings::Settings;
 use std::env::current_dir;
 use std::path::PathBuf;
+use structopt::StructOpt;
+
+use app_dirs::*;
+
+use errors::EnvyError;
+use hooks::zsh::Zsh;
+use opt::{Command, Envy};
+use settings::Settings;
 
 const APP_INFO: AppInfo = AppInfo {
     name: "Envy",
@@ -16,6 +23,23 @@ const APP_INFO: AppInfo = AppInfo {
 };
 
 fn main() -> Result<(), EnvyError> {
+    let opt = Envy::from_args();
+    match opt.cmd {
+        Command::Hook { shell } => hook(shell),
+        Command::Export { shell } => export(shell),
+    }
+}
+
+fn hook(shell: String) -> Result<(), EnvyError> {
+    let hook = match shell.as_ref() {
+        "zsh" => Zsh::hook()?,
+        _ => return Err(EnvyError::InvalidShell(shell)),
+    };
+    println!("{}", hook);
+    Ok(())
+}
+
+fn export(shell: String) -> Result<(), EnvyError> {
     let mut config = get_app_root(AppDataType::UserConfig, &APP_INFO)?;
     config = config.join("Config.toml");
     let settings = Settings::new(config.to_string_lossy())?;

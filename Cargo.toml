@@ -5,7 +5,7 @@ authors = ["Matthias Endler <matthias-endler@gmx.net>"]
 edition = "2018"
 
 [dependencies]
-structopt = "0.2.14"
+structopt = "0.2.15"
 app_dirs = "1.2.1"
 failure = "0.1.5"
 config = "0.9.2"

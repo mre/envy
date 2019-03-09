@@ -10,6 +10,8 @@ pub enum EnvyError {
     ConfigError(#[cause] ConfigError),
     #[fail(display = "{}", _0)]
     Io(#[cause] ::std::io::Error),
+    #[fail(display = "{}", _0)]
+    InvalidShell(String),
 }
 
 impl From<AppDirsError> for EnvyError {
