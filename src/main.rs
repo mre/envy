@@ -2,13 +2,11 @@
 extern crate serde_derive;
 
 mod errors;
+mod settings;
 
 use app_dirs::*;
-use config;
-use config::{Config, ConfigError};
 use errors::EnvyError;
-use regex::Regex;
-use std::borrow::Cow;
+use settings::Settings;
 use std::env::current_dir;
 use std::path::PathBuf;
 
@@ -16,26 +14,6 @@ const APP_INFO: AppInfo = AppInfo {
     name: "Envy",
     author: "Matthias Endler",
 };
-
-#[derive(Debug, Deserialize)]
-pub struct Settings {
-    paths: Option<Vec<PathConfig>>,
-}
-
-#[derive(Debug, Deserialize)]
-struct PathConfig {
-    #[serde(with = "serde_regex")]
-    pattern: Regex,
-    env: Vec<String>,
-}
-
-impl Settings {
-    pub fn new(config: Cow<str>) -> Result<Self, ConfigError> {
-        let mut s = Config::new();
-        s.merge(config::File::with_name(&config))?;
-        s.try_into()
-    }
-}
 
 fn main() -> Result<(), EnvyError> {
     let mut config = get_app_root(AppDataType::UserConfig, &APP_INFO)?;
