@@ -107,7 +107,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "envy"
+name = "envy-cli"
 version = "0.1.0"
 dependencies = [
  "app_dirs 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",

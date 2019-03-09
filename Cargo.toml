@@ -1,8 +1,12 @@
 [package]
-name = "envy"
+name = "envy-cli"
 version = "0.1.0"
 authors = ["Matthias Endler <matthias-endler@gmx.net>"]
 edition = "2018"
+
+[[bin]]
+name = "envy"
+path = "src/main.rs"
 
 [dependencies]
 structopt = "0.2.15"
