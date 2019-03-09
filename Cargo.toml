@@ -12,6 +12,7 @@ keywords = [
 ]
 license = "Apache-2.0/MIT"
 repository = "https://github.com/mre/envy"
+readme = "README.md"
 
 [[bin]]
 name = "envy"
