@@ -3,6 +3,15 @@ name = "envy-cli"
 version = "0.1.0"
 authors = ["Matthias Endler <matthias-endler@gmx.net>"]
 edition = "2018"
+description = "A magical little tool that takes care of your environment settings."
+homepage = "https://github.com/mre/envy"
+keywords = [
+    "environment",
+    "dotenv",
+    "cli",
+]
+license = "Apache-2.0/MIT"
+repository = "https://github.com/mre/envy"
 
 [[bin]]
 name = "envy"
