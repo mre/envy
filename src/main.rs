@@ -39,7 +39,8 @@ fn hook(shell: String) -> Result<(), EnvyError> {
     Ok(())
 }
 
-fn export(shell: String) -> Result<(), EnvyError> {
+// TODO: We don't support different shells yet. Fix that.
+fn export(_shell: String) -> Result<(), EnvyError> {
     let mut config = get_app_root(AppDataType::UserConfig, &APP_INFO)?;
     config = config.join("Config.toml");
     let settings = Settings::new(config.to_string_lossy())?;

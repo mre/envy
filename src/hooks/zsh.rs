@@ -1,6 +1,8 @@
 use crate::errors::EnvyError;
 use std::env::current_exe;
 
+// Shamelessly taken from direnv
+// https://github.com/direnv/direnv/blob/e54386bdcccf9c7eea5976f787c4c31ddb5157d5/shell_zsh.go
 static ZSH_HOOK: &str = r#" 
 _envy_hook() {
     eval "$("{{.SelfPath}}" export zsh)";
