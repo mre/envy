@@ -5,12 +5,10 @@ mod errors;
 
 use app_dirs::*;
 use config;
-use config::{Config, ConfigError, Environment, File};
+use config::{Config, ConfigError};
 use errors::EnvyError;
 use regex::Regex;
-use serde::Deserialize;
 use std::borrow::Cow;
-use std::collections::HashMap;
 use std::env::current_dir;
 use std::path::PathBuf;
 
