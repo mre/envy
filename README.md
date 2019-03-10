@@ -5,14 +5,13 @@ expression.
 
 ## Example
 
-At work, I have to set some environment variables everytime I'm working on
-certain projects. For example, these can be Google Cloud settings, the Consul host or
-Docker configs.
+At work, I have to set some environment variables everytime I'm working on certain projects.  
+For example, these can be Google Cloud settings, the Consul host or Docker configs.
 
 It's tedious to do that myself every time. 
 
-[direnv] automatically loads `.env` files, but I don't want to clutter my system
-with `.env` files. Also I need the same environment variables in a few unrelated
+[direnv] automatically loads `.env` files, but I don't want to clutter my system  
+with `.env` files. Also I need the same environment variables in a few unrelated  
 projects and I don't want to keep the `.env` files in sync. 
 
 Thus, envy was born.
@@ -34,7 +33,7 @@ env = [
 ]
 ```
 
-On macOS, this file is located at `/Users/<user>/Library/Application Support/Envy/Config.toml`.
+On macOS, this file is located at `/Users/<user>/Library/Application Support/Envy/Config.toml`.  
 The first regular expression that matches a path will be used.
 
 ## Installation
@@ -49,7 +48,7 @@ Add the following line at the end of the `~/.zshrc` file:
 eval "$(envy hook zsh)"
 ```
 
-Once you load a new shell, envy will watch directories and set the specified
+Once you load a new shell, envy will watch directories and set the specified  
 environment variables from the config file.
 
 ## Limitations
