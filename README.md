@@ -1,25 +1,23 @@
 # envy
 
-A magical little tool that takes care of your environment settings.  
-
-## What?
-
-It sets environment variables when you enter a directory that matches a regular
+...sets environment variables when you enter a directory that matches a regular
 expression.
 
 ## Example
 
-At work, I have to set some environment variables whenever I'm working on
-certain projects. For example, these can be Google Cloud settings, my Consul or
-Docker config.
+At work, I have to set some environment variables everytime I'm working on
+certain projects. For example, these can be Google Cloud settings, the Consul host or
+Docker configs.
 
 It's tedious to do that myself every time. 
 
-[direnv] automatically loads `.env` files, but I didn't want to clutter my system
-with `.env` files and I need the same environment variables in a few unrelated
-projects and I don't want to have to keep the the `.env` files in sync. 
+[direnv] automatically loads `.env` files, but I don't want to clutter my system
+with `.env` files. Also I need the same environment variables in a few unrelated
+projects and I don't want to keep the `.env` files in sync. 
 
-Thus, envy uses a config file that defines, what environment variables to set:
+Thus, envy was born.
+
+It uses a config file that defines, what environment variables to set when:
 
 ```toml
 [[paths]]
@@ -45,7 +43,7 @@ The first regular expression that matches a path will be used.
 cargo install envy-cli
 ```
 
-Add the following line at the end of the ~/.zshrc file:
+Add the following line at the end of the `~/.zshrc` file:
 
 ```
 eval "$(envy hook zsh)"
@@ -57,8 +55,8 @@ environment variables from the config file.
 ## Limitations
 
 * Only supports zsh for now.
-* Only tested on macOS. Should also work on Linux and Windows.
-* Does not unset variables yet when you leave a directory.
+* Only tested on macOS. Should also work on Linux and Windows, though.
+* Does not unset variables when you leave a directory yet.
 * Only developing this for myself. Thus, this project won't be very actively
   developed.
 
