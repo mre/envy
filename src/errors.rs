@@ -12,6 +12,8 @@ pub enum EnvyError {
     Io(#[cause] ::std::io::Error),
     #[fail(display = "{}", _0)]
     InvalidShell(String),
+    #[fail(display = "EDITOR environment variable is not set: {}", _0)]
+    InvalidEditor(#[cause] ::std::env::VarError),
 }
 
 impl From<AppDirsError> for EnvyError {

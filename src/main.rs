@@ -8,6 +8,7 @@ mod settings;
 
 use std::env::current_dir;
 use std::path::PathBuf;
+use std::process;
 use structopt::StructOpt;
 
 use app_dirs::*;
@@ -22,12 +23,30 @@ const APP_INFO: AppInfo = AppInfo {
     author: "Matthias Endler",
 };
 
+fn get_config() -> Result<PathBuf, EnvyError> {
+    let config = get_app_root(AppDataType::UserConfig, &APP_INFO)?;
+    Ok(config.join("Config.toml"))
+}
+
 fn main() -> Result<(), EnvyError> {
     let opt = Envy::from_args();
     match opt.cmd {
         Command::Hook { shell } => hook(shell),
         Command::Export { shell } => export(shell),
+        Command::Edit {} => edit(),
     }
+}
+
+pub fn edit_file(filename: &str) -> Result<std::process::ExitStatus, EnvyError> {
+    let editor_name = std::env::var("EDITOR").map_err(EnvyError::InvalidEditor)?;
+    let mut editor = process::Command::new(editor_name).arg(filename).spawn()?;
+    Ok(editor.wait()?)
+}
+
+fn edit() -> Result<(), EnvyError> {
+    let config = get_config()?;
+    edit_file(&config.to_string_lossy())?;
+    Ok(())
 }
 
 fn hook(shell: String) -> Result<(), EnvyError> {
@@ -41,9 +60,7 @@ fn hook(shell: String) -> Result<(), EnvyError> {
 
 // TODO: We don't support different shells yet. Fix that.
 fn export(_shell: String) -> Result<(), EnvyError> {
-    let mut config = get_app_root(AppDataType::UserConfig, &APP_INFO)?;
-    config = config.join("Config.toml");
-    let settings = Settings::new(config.to_string_lossy())?;
+    let settings = Settings::new(get_config()?.to_string_lossy())?;
     let dir = current_dir()?;
     if let Some(env) = find_matching(dir, settings) {
         println!("export {}", env.join(" "));

@@ -15,4 +15,7 @@ pub enum Command {
     /// Print the hook to activate envy for your shell
     #[structopt(name = "hook")]
     Hook { shell: String },
+    /// Edit the envy config file
+    #[structopt(name = "edit")]
+    Edit {},
 }

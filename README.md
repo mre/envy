@@ -19,7 +19,10 @@ It's tedious to do that myself every time.
 with `.env` files and I need the same environment variables in a few unrelated
 projects and I don't want to have to keep the the `.env` files in sync. 
 
-Thus, envy uses a config file that defines, what environment variables to set:
+Thus, envy uses a config file that defines what environment variables to set for each folder.
+
+Run `envy edit` to open the config file.
+(On macOS, this file is located at `/Users/<user>/Library/Application Support/Envy/Config.toml`)
 
 ```toml
 [[paths]]
@@ -36,7 +39,6 @@ env = [
 ]
 ```
 
-On macOS, this file is located at `/Users/<user>/Library/Application Support/Envy/Config.toml`.
 The first regular expression that matches a path will be used.
 
 ## Installation
@@ -51,15 +53,15 @@ Add the following line at the end of the ~/.zshrc file:
 eval "$(envy hook zsh)"
 ```
 
-Once you load a new shell, envy will watch directories and set the specified
+Once you open a new shell, envy will watch directories and set the specified
 environment variables from the config file.
 
 ## Limitations
 
 * Only supports zsh for now.
 * Only tested on macOS. Should also work on Linux and Windows.
-* Does not unset variables yet when you leave a directory.
-* Only developing this for myself. Thus, this project won't be very actively
+* Does not unset variables when you leave a directory.
+* Developing this for myself. Thus, this project won't be very actively
   developed.
 
 [direnv]: https://direnv.net/
