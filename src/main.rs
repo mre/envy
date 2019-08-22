@@ -34,6 +34,7 @@ fn main() -> Result<(), EnvyError> {
         Command::Hook { shell } => hook(shell),
         Command::Export { shell } => export(shell),
         Command::Edit {} => edit(),
+        Command::Show {} => show(),
     }
 }
 
@@ -55,6 +56,17 @@ fn hook(shell: String) -> Result<(), EnvyError> {
         _ => return Err(EnvyError::InvalidShell(shell)),
     };
     println!("{}", hook);
+    Ok(())
+}
+
+fn show() -> Result<(), EnvyError> {
+    let settings = Settings::new(get_config()?.to_string_lossy())?;
+    let dir = current_dir()?;
+    if let Some(env) = find_matching(dir, settings) {
+        println!("{}", env.join("\n"));
+    } else {
+        println!("envy found no matches for this directory.");
+    }
     Ok(())
 }
 

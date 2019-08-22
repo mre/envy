@@ -18,4 +18,7 @@ pub enum Command {
     /// Edit the envy config file
     #[structopt(name = "edit")]
     Edit {},
+    /// Show envy config for current directory
+    #[structopt(name = "show")]
+    Show {},
 }

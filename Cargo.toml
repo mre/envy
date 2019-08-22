@@ -1,6 +1,6 @@
 [package]
 name = "envy-cli"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Matthias Endler <matthias-endler@gmx.net>"]
 edition = "2018"
 description = "A magical little tool that takes care of your environment settings."
