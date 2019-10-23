@@ -21,7 +21,7 @@ path = "src/main.rs"
 [dependencies]
 structopt = "0.3.3"
 app_dirs = "1.2.1"
-failure = "0.1.5"
+failure = "0.1.6"
 config = "0.9.3"
 serde = "1.0.101"
 serde_derive = "1.0.99"
