@@ -124,7 +124,7 @@ dependencies = [
  "serde 1.0.104 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.104 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_regex 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "structopt 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "structopt 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -423,16 +423,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "structopt"
-version = "0.3.6"
+version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "structopt-derive 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "structopt-derive 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "structopt-derive"
-version = "0.3.6"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "heck 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -616,8 +616,8 @@ dependencies = [
 "checksum shell32-sys 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "9ee04b46101f57121c9da2b151988283b6beb79b34f5bb29a58ee48cb695122c"
 "checksum static_assertions 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)" = "7f3eb36b47e512f8f1c9e3d10c2c1965bc992bd9cdb024fa581e2194501c83d3"
 "checksum strsim 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8ea5119cdb4c55b55d432abb513a0429384878c15dde60cc77b1c99de1a95a6a"
-"checksum structopt 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)" = "df55a89a335d771b9183c06afc6ed9f8e7593cffbd06ddc15f22d843ee3edda5"
-"checksum structopt-derive 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)" = "1ff2ee51ea794265685fd0d79a4b4f0d66bb03f49355a9ee107a49b03cff350e"
+"checksum structopt 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)" = "884ae79d6aad1e738f4a70dff314203fd498490a63ebc4d03ea83323c40b7b72"
+"checksum structopt-derive 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "0a97f829a34a0a9d5b353a881025a23b8c9fd09d46be6045df6b22920dbd7a93"
 "checksum syn 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "158521e6f544e7e3dcfc370ac180794aa38cb34a1b1e07609376d4adcf429b93"
 "checksum syn-mid 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "9fd3937748a7eccff61ba5b90af1a20dbf610858923a9192ea0ecb0cb77db1d0"
 "checksum synstructure 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)" = "3f085a5855930c0441ca1288cf044ea4aecf4f43a91668abdb870b4ba546a203"
