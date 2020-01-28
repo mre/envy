@@ -52,6 +52,28 @@ eval "$(envy hook zsh)"
 Once you open a new shell, envy will start matching directories and set the specified
 environment variables from the config file.
 
+## Usage
+
+```
+envy 0.3.0
+Matthias Endler <matthias-endler@gmx.net>
+context-based environment variables
+
+USAGE:
+    envy <SUBCOMMAND>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    edit      Edit the envy config file
+    export    Export environment variables based on the current directory
+    help      Prints this message or the help of the given subcommand(s)
+    hook      Print the hook to activate envy for your shell
+    show      Show envy config for current directory
+```
+
 ## Limitations
 
 * Only supports zsh for now.
