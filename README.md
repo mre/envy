@@ -1,5 +1,7 @@
 # envy
 
+![Rust](https://github.com/mre/envy/workflows/Rust/badge.svg)
+
 ...sets environment variables when you enter a directory that matches a regular
 expression.
 
