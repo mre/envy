@@ -40,6 +40,13 @@ env = [
 ]
 ```
 
+## direnv compatibility
+
+SOON: 
+`envy` supports loading environment files a la `direnv` as well.
+Run `envy add` to auto-load the `.env` file in the current path
+on enter.
+
 ## Installation
 
 ```
