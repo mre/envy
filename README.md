@@ -1,18 +1,17 @@
 # envy
 
-...sets environment variables when you enter a directory that matches a regular
-expression.
+...sets environment variables when you enter a directory.
 
 ## Example
 
 At work, I have to set some environment variables every time I'm working on certain projects.  
 For example, these can be Google Cloud settings, the Consul host or Docker configs.
 
-It's tedious to do that myself every time. 
+It's tedious to do that myself every time.
 
 [direnv] automatically loads `.env` files, but I don't want to clutter my system  
-with `.env` files. Also I need the same environment variables in a few unrelated  
-projects and I don't want to keep the `.env` files in sync. 
+with `.env` files. Also, I need the same environment variables in a few unrelated  
+projects and I don't want to keep the `.env` files in sync.
 
 Thus, the idea for envy was born.
 
@@ -76,9 +75,9 @@ SUBCOMMANDS:
 
 ## Limitations
 
-* Only supports zsh for now.
-* Only tested on macOS. Should also work on Linux and Windows, though.
-* Does not unset variables when you leave a directory.
-* Developing this for myself. Thus, this project won't be worked on very actively.
+- Only supports zsh for now.
+- Only tested on macOS. It should also work on Linux and Windows, though.
+- Does not unset variables when you leave a directory.
+- Developing this for myself. Thus, this project won't be worked on very actively.
 
 [direnv]: https://direnv.net/
