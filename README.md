@@ -1,6 +1,8 @@
 # envy
 
 ...sets environment variables when you enter a directory.
+[![Documentation](https://docs.rs/envy-cli/badge.svg)](https://docs.rs/envy-cli/)
+![Rust](https://github.com/mre/envy/workflows/Rust/badge.svg)
 
 ## Example
 
@@ -35,6 +37,13 @@ env = [
   "foo=bar"
 ]
 ```
+
+## direnv compatibility
+
+SOON:
+`envy` supports loading environment files a la `direnv` as well.
+Run `envy add` to auto-load the `.env` file in the current path
+on enter.
 
 ## Installation
 
