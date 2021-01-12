@@ -2,6 +2,7 @@ use config;
 use config::{Config, ConfigError};
 use regex::Regex;
 use std::borrow::Cow;
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Settings {
