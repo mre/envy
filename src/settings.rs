@@ -1,24 +1,59 @@
-use config;
-use config::{Config, ConfigError};
+use anyhow::{Context, Result};
+use config::Config;
 use regex::Regex;
-use std::borrow::Cow;
+use std::{fs, path::PathBuf};
 
-#[derive(Debug, Deserialize)]
-pub struct Settings {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct EnvySettings {
     pub paths: Option<Vec<PathConfig>>,
+    pub envs: Option<Vec<PathBuf>>,
 }
 
-#[derive(Debug, Deserialize)]
+impl EnvySettings {
+    // Add a path to an env file to the list of allowed files
+    pub fn add_env(&mut self, path: PathBuf) -> &mut Self {
+        // Add directory to settings
+        match self.envs.as_mut() {
+            Some(envs) => {
+                envs.push(path);
+            }
+            None => self.envs = Some(vec![path]),
+        };
+        self
+    }
+
+    pub fn matches(self, dir: PathBuf) -> Option<Vec<String>> {
+        let path_str = dir.to_string_lossy();
+        for path in self.paths? {
+            if path.pattern.is_match(&path_str) {
+                return Some(path.env);
+            }
+        }
+        None
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PathConfig {
     #[serde(with = "serde_regex")]
     pub pattern: Regex,
     pub env: Vec<String>,
 }
 
+pub(crate) struct Settings {}
+
 impl Settings {
-    pub fn new(config: Cow<str>) -> Result<Self, ConfigError> {
-        let mut s = Config::new();
-        s.merge(config::File::with_name(&config))?;
-        s.try_into()
+    pub fn load(config_path: PathBuf) -> Result<EnvySettings> {
+        let mut c = Config::new();
+        c.merge(config::File::from(config_path))?;
+        c.try_into().context("Cannot read config file")
+    }
+
+    pub fn save(config_path: PathBuf, settings: EnvySettings) -> Result<()> {
+        let serialized: &[u8] = Config::try_from(&settings)
+            .context("Cannot read config")?
+            .try_into()
+            .context("Cannot serialize config to disk")?;
+        fs::write(config_path, serialized).context("Cannot write config")
     }
 }

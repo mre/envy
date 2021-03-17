@@ -1,4 +1,4 @@
-use crate::errors::EnvyError;
+use anyhow::Result;
 use std::env::current_exe;
 
 // Shamelessly taken from direnv
@@ -16,7 +16,7 @@ fi
 pub struct Zsh;
 
 impl Zsh {
-    pub fn hook() -> Result<String, EnvyError> {
+    pub fn hook() -> Result<String> {
         Ok(ZSH_HOOK.replace("{{.SelfPath}}", &current_exe()?.to_string_lossy()))
     }
 }

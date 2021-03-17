@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use structopt::StructOpt;
 
 #[derive(StructOpt)]
@@ -21,4 +22,16 @@ pub enum Command {
     /// Show envy config for current directory
     #[structopt(name = "show")]
     Show {},
+    /// Print path to envy config file
+    #[structopt(name = "path")]
+    Path {},
+    /// Grants envy to load the given `.env` file
+    #[structopt(name = "allow")]
+    Allow {
+        #[structopt(parse(from_os_str), default_value = ".env")]
+        env_file: PathBuf,
+    },
+    /// Revokes the authorization of a given `.env` file
+    #[structopt(name = "deny")]
+    Deny {},
 }

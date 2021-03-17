@@ -9,7 +9,7 @@
 At work, I have to set some environment variables every time I'm working on certain projects.  
 For example, these can be Google Cloud settings, the Consul host or Docker configs.
 
-It's tedious to do that myself every time.
+It's tedious to set the correct environment variables myself every time.
 
 [direnv] automatically loads `.env` files, but I don't want to clutter my system  
 with `.env` files. Also, I need the same environment variables in a few unrelated  
@@ -40,10 +40,10 @@ env = [
 
 ## direnv compatibility
 
-SOON:
-`envy` supports loading environment files a la `direnv` as well.
-Run `envy add` to auto-load the `.env` file in the current path
-on enter.
+`envy` supports loading environment files a la `direnv` as well. Run `envy allow .env` to auto-load the `.env` file in the current path on enter. You can add
+multiple `.env` files (e.g. `envy allow .envrc`). Duplicate keys will be
+overwritten in the order of appearance in the envy config file (run `envy edit`
+to modify order).
 
 ## Installation
 
@@ -84,7 +84,7 @@ SUBCOMMANDS:
 
 ## Limitations
 
-- Only supports zsh for now.
+- Only zsh supported for now.
 - Only tested on macOS. It should also work on Linux and Windows, though.
 - Does not unset variables when you leave a directory.
 - Developing this for myself. Thus, this project won't be worked on very actively.
