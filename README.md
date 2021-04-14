@@ -28,7 +28,7 @@ It uses a config file that defines what environment variables to set for each fo
 cargo install envy-cli
 ```
 
-Add the following line at the end of the `~/.zshrc` file:
+Add the following line to the end of your `~/.zshrc` file:
 
 ```
 eval "$(envy hook zsh)"
@@ -49,7 +49,8 @@ The first regular expression that matches a path wins.
 [[paths]]
 pattern = ".*project1.*"
 env = [
-  "CONSUL_HTTP_ADDR=http://consul:8500"
+  "CONSUL_HTTP_ADDR=http://consul:8500",
+  "GITHUB_TOKEN=123"
 ]
 
 [[paths]]
@@ -59,6 +60,9 @@ env = [
   "foo=bar"
 ]
 ```
+
+The moment you save the file, the current terminal will automatically pick up the new settings;
+no need to reload or open a new terminal. :v:
 
 ## direnv compatibility
 
