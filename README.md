@@ -1,27 +1,49 @@
 # envy
 
 ...sets environment variables when you enter a directory.
+
+
 [![Documentation](https://docs.rs/envy-cli/badge.svg)](https://docs.rs/envy-cli/)
 ![Rust](https://github.com/mre/envy/workflows/Rust/badge.svg)
+
 
 ## Example
 
 At work, I have to set some environment variables every time I'm working on certain projects.  
-For example, these can be Google Cloud settings, the Consul host or Docker configs.
+For example, these can be Google Cloud settings, the Consul host, or Docker configs.
 
 It's tedious to set the correct environment variables myself every time.
 
 [direnv] automatically loads `.env` files, but I don't want to clutter my system  
 with `.env` files. Also, I need the same environment variables in a few unrelated  
-projects and I don't want to keep the `.env` files in sync.
+projects, and I don't want to keep the `.env` files in sync.
 
-Thus, the idea for envy was born.
+Thus, the idea for `envy` was born.
 
 It uses a config file that defines what environment variables to set for each folder.
-The first regular expression that matches a path wins.
+
+## Installation
+
+```
+cargo install envy-cli
+```
+
+Add the following line at the end of the `~/.zshrc` file:
+
+```
+eval "$(envy hook zsh)"
+```
+
+Once you open a new shell, `envy` will start matching directories and set the specified
+environment variables from the config file.
+
+## Usage
 
 Run `envy edit` to open the config file.
 (On macOS, this file is located at `/Users/<user>/Library/Application Support/Envy/Config.toml`.)
+
+Define the list of regular expressions and the settings.
+The first regular expression that matches a path wins.
 
 ```toml
 [[paths]]
@@ -40,27 +62,12 @@ env = [
 
 ## direnv compatibility
 
-`envy` supports loading environment files a la `direnv` as well. Run `envy allow .env` to auto-load the `.env` file in the current path on enter. You can add
+`envy` supports loading environment files à la `direnv` as well. Run `envy allow .env` to auto-load the `.env` file in the current path on enter. You can add
 multiple `.env` files (e.g. `envy allow .envrc`). Duplicate keys will be
 overwritten in the order of appearance in the envy config file (run `envy edit`
 to modify order).
 
-## Installation
-
-```
-cargo install envy-cli
-```
-
-Add the following line at the end of the `~/.zshrc` file:
-
-```
-eval "$(envy hook zsh)"
-```
-
-Once you open a new shell, envy will start matching directories and set the specified
-environment variables from the config file.
-
-## Usage
+## Command-line options
 
 ```
 envy 0.3.0
