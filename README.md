@@ -74,7 +74,7 @@ to modify order).
 ## Command-line options
 
 ```
-envy 0.3.0
+envy 0.3.3
 Matthias Endler <matthias-endler@gmx.net>
 context-based environment variables
 
@@ -86,10 +86,13 @@ FLAGS:
     -V, --version    Prints version information
 
 SUBCOMMANDS:
+    allow     Grants envy to load the given `.env` file
+    deny      Revokes the authorization of a given `.env` file
     edit      Edit the envy config file
     export    Export environment variables based on the current directory
     help      Prints this message or the help of the given subcommand(s)
     hook      Print the hook to activate envy for your shell
+    path      Print path to envy config file
     show      Show envy config for current directory
 ```
 
