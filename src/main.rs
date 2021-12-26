@@ -11,20 +11,14 @@ use std::path::PathBuf;
 use std::process;
 use structopt::StructOpt;
 
-use app_dirs::*;
-
 use hooks::zsh::Zsh;
 use opt::{Command, Envy};
 use settings::Settings;
-
-const APP_INFO: AppInfo = AppInfo {
-    name: "Envy",
-    author: "Matthias Endler",
-};
+use directories::BaseDirs;
 
 fn config_path() -> Result<PathBuf> {
-    let config = get_app_root(AppDataType::UserConfig, &APP_INFO)?;
-    Ok(config.join("Config.toml"))
+    let base_dirs = BaseDirs::new().context("Cannot get base directories")?;
+    Ok(base_dirs.config_dir().join("envy").join("Config.toml"))
 }
 
 fn main() -> Result<()> {
