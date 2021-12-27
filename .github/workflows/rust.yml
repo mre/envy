@@ -1,6 +1,11 @@
 name: Rust
 
-on: [push]
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  push:
+    branches:
+    - master
 
 jobs:
   build:
