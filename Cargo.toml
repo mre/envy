@@ -19,7 +19,7 @@ name = "envy"
 path = "src/main.rs"
 
 [dependencies]
-structopt = "0.3.25"
+structopt = "0.3.26"
 failure = "0.1.8"
 config = "0.11.0"
 serde = "1.0.132"
