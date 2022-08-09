@@ -1,5 +1,3 @@
-#[macro_use]
-extern crate serde_derive;
 use anyhow::{anyhow, Context, Result};
 
 mod hooks;
@@ -11,10 +9,10 @@ use std::path::PathBuf;
 use std::process;
 use structopt::StructOpt;
 
+use directories::BaseDirs;
 use hooks::zsh::Zsh;
 use opt::{Command, Envy};
 use settings::Settings;
-use directories::BaseDirs;
 
 fn config_path() -> Result<PathBuf> {
     let base_dirs = BaseDirs::new().context("Cannot get base directories")?;

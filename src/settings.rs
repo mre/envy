@@ -1,6 +1,7 @@
 use anyhow::{Context, Result};
 use config::Config;
 use regex::Regex;
+use serde::{Deserialize, Serialize};
 use std::{fs, path::PathBuf};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -44,16 +45,20 @@ pub(crate) struct Settings {}
 
 impl Settings {
     pub fn load(config_path: PathBuf) -> Result<EnvySettings> {
-        let mut c = Config::new();
-        c.merge(config::File::from(config_path))?;
-        c.try_into().context("Cannot read config file")
+        config::Config::builder()
+            .add_source(config::File::from(config_path))
+            .build()
+            .context("Cannot not read config")?
+            .try_deserialize::<EnvySettings>()
+            .context("Cannot deserialize config")
     }
 
     pub fn save(config_path: PathBuf, settings: EnvySettings) -> Result<()> {
         let serialized: &[u8] = Config::try_from(&settings)
             .context("Cannot read config")?
-            .try_into()
+            .try_deserialize()
             .context("Cannot serialize config to disk")?;
+
         fs::write(config_path, serialized).context("Cannot write config")
     }
 }
