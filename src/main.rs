@@ -27,13 +27,20 @@ fn main() -> Result<()> {
         Command::Edit {} => edit(),
         Command::Show {} => show(),
         Command::Allow { env_file } => allow(env_file),
-        Command::Deny {} => deny(),
+        Command::Deny { env_file } => deny(env_file),
         Command::Path {} => path(),
     }
 }
 
-fn deny() -> Result<()> {
-    todo!()
+fn deny(env_file: PathBuf) -> Result<()> {
+    if !env_file.exists() {
+        return Err(anyhow!("File does not exist: {}", env_file.display()));
+    };
+    let mut settings = Settings::load(config_path()?)?;
+    // Get full path to env file
+    let env_file = env_file.canonicalize()?;
+    settings.remove_env(env_file);
+    Settings::save(config_path()?, settings)
 }
 
 // Add the current directory to the list of allowed paths.
@@ -43,6 +50,8 @@ fn allow(env_file: PathBuf) -> Result<()> {
         return Err(anyhow!("File does not exist: {}", env_file.display()));
     };
     let mut settings = Settings::load(config_path()?)?;
+    // Get full path to env file
+    let env_file = env_file.canonicalize()?;
     settings.add_env(env_file);
     Settings::save(config_path()?, settings)
 }
@@ -71,10 +80,14 @@ fn hook(shell: String) -> Result<()> {
 fn show() -> Result<()> {
     let settings = Settings::load(config_path()?)?;
     let dir = current_dir()?;
-    match settings.matches(dir) {
+    settings.matching_env_files(&dir).iter().for_each(|env| {
+        println!("Loading {}", env.display());
+    });
+    match settings.matching_patterns(&dir) {
         Some(env) => println!("{}", env.join("\n")),
-        None => println!("envy found no matches for this directory."),
+        None => println!("envy found no pattern matches for this directory."),
     };
+
     Ok(())
 }
 
@@ -91,8 +104,11 @@ fn export(shell: String) -> Result<()> {
         todo!("{} not supported yet. You could add support for it!", shell);
     }
     let settings = Settings::load(config_path()?)?;
-    if let Some(env) = settings.matches(current_dir()?) {
-        println!("export {}", env.join(" "));
+    if let Some(patterns) = settings.matching_patterns(&current_dir()?) {
+        println!("export {}", patterns.join(" "));
+    }
+    for env_file in settings.matching_env_files(&current_dir()?) {
+        println!("source {}", env_file.display());
     }
     Ok(())
 }

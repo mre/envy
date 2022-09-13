@@ -1,13 +1,12 @@
 use anyhow::{Context, Result};
-use config::Config;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::{fs, path::PathBuf};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EnvySettings {
-    pub paths: Option<Vec<PathConfig>>,
     pub envs: Option<Vec<PathBuf>>,
+    pub paths: Option<Vec<PathConfig>>,
 }
 
 impl EnvySettings {
@@ -16,21 +15,43 @@ impl EnvySettings {
         // Add directory to settings
         match self.envs.as_mut() {
             Some(envs) => {
-                envs.push(path);
+                if !envs.contains(&path) {
+                    envs.push(path);
+                }
             }
             None => self.envs = Some(vec![path]),
         };
         self
     }
 
-    pub fn matches(self, dir: PathBuf) -> Option<Vec<String>> {
+    // Remove a path to an env file from the list of allowed files
+    pub fn remove_env(&mut self, path: PathBuf) -> &mut Self {
+        if let Some(envs) = self.envs.as_mut() {
+            envs.retain(|p| p != &path);
+        };
+        self
+    }
+
+    pub fn matching_patterns(&self, dir: &PathBuf) -> Option<Vec<String>> {
         let path_str = dir.to_string_lossy();
-        for path in self.paths? {
+        for path in self.paths.as_ref()? {
             if path.pattern.is_match(&path_str) {
-                return Some(path.env);
+                return Some(path.env.clone());
             }
         }
         None
+    }
+
+    // get all env files in dir and parent directory
+    pub fn matching_env_files(&self, dir: &PathBuf) -> Vec<PathBuf> {
+        self.envs.iter().flatten().filter(|env|
+            // check if env file is in dir
+            if let Some(env_dir) = env.parent() {
+                return dir.starts_with(env_dir)
+            } else {
+                false
+            }
+        ).cloned().collect()
     }
 }
 
@@ -54,11 +75,7 @@ impl Settings {
     }
 
     pub fn save(config_path: PathBuf, settings: EnvySettings) -> Result<()> {
-        let serialized: &[u8] = Config::try_from(&settings)
-            .context("Cannot read config")?
-            .try_deserialize()
-            .context("Cannot serialize config to disk")?;
-
-        fs::write(config_path, serialized).context("Cannot write config")
+        let toml = toml::to_string_pretty(&settings).context("Cannot serialize config")?;
+        fs::write(config_path, toml).context("Cannot write config")
     }
 }

@@ -33,5 +33,8 @@ pub enum Command {
     },
     /// Revokes the authorization of a given `.env` file
     #[structopt(name = "deny")]
-    Deny {},
+    Deny {
+        #[structopt(parse(from_os_str), default_value = ".env")]
+        env_file: PathBuf,
+    },
 }

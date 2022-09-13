@@ -224,6 +224,7 @@ dependencies = [
  "serde_derive",
  "serde_regex",
  "structopt",
+ "toml",
 ]
 
 [[package]]

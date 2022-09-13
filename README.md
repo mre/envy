@@ -2,10 +2,8 @@
 
 ...sets environment variables when you enter a directory.
 
-
 [![Documentation](https://docs.rs/envy-cli/badge.svg)](https://docs.rs/envy-cli/)
 ![Rust](https://github.com/mre/envy/workflows/Rust/badge.svg)
-
 
 ## Example
 
@@ -70,6 +68,7 @@ no need to reload or open a new terminal. :v:
 multiple `.env` files (e.g. `envy allow .envrc`). Duplicate keys will be
 overwritten in the order of appearance in the envy config file (run `envy edit`
 to modify order).
+Use `envy deny .env` to remove an environment file from the list.
 
 ## Command-line options
 
