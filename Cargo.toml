@@ -1,6 +1,6 @@
 [package]
 name = "envy-cli"
-version = "0.3.4"
+version = "0.4.0"
 authors = ["Matthias Endler <matthias-endler@gmx.net>"]
 edition = "2021"
 resolver = "1"

@@ -73,8 +73,7 @@ Use `envy deny .env` to remove an environment file from the list.
 ## Command-line options
 
 ```
-envy 0.3.3
-Matthias Endler <matthias-endler@gmx.net>
+envy 0.4.0
 context-based environment variables
 
 USAGE:
@@ -89,6 +88,7 @@ SUBCOMMANDS:
     deny      Revokes the authorization of a given `.env` file
     edit      Edit the envy config file
     export    Export environment variables based on the current directory
+    find      Find a single environment variable and print its value
     help      Prints this message or the help of the given subcommand(s)
     hook      Print the hook to activate envy for your shell
     path      Print path to envy config file
