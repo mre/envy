@@ -1,7 +1,10 @@
 use anyhow::{Context, Result};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::{fs, path::PathBuf};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EnvySettings {
@@ -32,7 +35,7 @@ impl EnvySettings {
         self
     }
 
-    pub fn matching_patterns(&self, dir: &PathBuf) -> Option<Vec<String>> {
+    pub fn matching_patterns(&self, dir: &Path) -> Option<Vec<String>> {
         let path_str = dir.to_string_lossy();
         for path in self.paths.as_ref()? {
             if path.pattern.is_match(&path_str) {
@@ -43,11 +46,11 @@ impl EnvySettings {
     }
 
     // get all env files in dir and parent directory
-    pub fn matching_env_files(&self, dir: &PathBuf) -> Vec<PathBuf> {
+    pub fn matching_env_files(&self, dir: &Path) -> Vec<PathBuf> {
         self.envs.iter().flatten().filter(|env|
             // check if env file is in dir
             if let Some(env_dir) = env.parent() {
-                return dir.starts_with(env_dir)
+                dir.starts_with(env_dir)
             } else {
                 false
             }

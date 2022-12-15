@@ -22,6 +22,12 @@ pub enum Command {
     /// Show envy config for current directory
     #[structopt(name = "show")]
     Show {},
+    /// Find a single environment variable and print its value
+    #[structopt(name = "find")]
+    Find {
+        #[structopt(name = "VARIABLE")]
+        variable: String,
+    },
     /// Print path to envy config file
     #[structopt(name = "path")]
     Path {},

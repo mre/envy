@@ -26,10 +26,26 @@ fn main() -> Result<()> {
         Command::Export { shell } => export(shell),
         Command::Edit {} => edit(),
         Command::Show {} => show(),
+        Command::Find { variable } => find(variable),
         Command::Allow { env_file } => allow(env_file),
         Command::Deny { env_file } => deny(env_file),
         Command::Path {} => path(),
     }
+}
+
+/// Get all environment variables currently set
+/// and return the value of the given variable
+fn find(variable: String) -> Result<(), anyhow::Error> {
+    let value = std::env::vars()
+        .find(|(key, _)| key == &variable)
+        .map(|(_, value)| value);
+
+    match value {
+        Some(value) => println!("{}", value),
+        None => println!("Variable {} not found", variable),
+    }
+
+    Ok(())
 }
 
 fn deny(env_file: PathBuf) -> Result<()> {
