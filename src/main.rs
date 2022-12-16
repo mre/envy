@@ -4,9 +4,9 @@ mod hooks;
 mod opt;
 mod settings;
 
-use std::env::current_dir;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process;
+use std::{env::current_dir, fs};
 use structopt::StructOpt;
 
 use directories::BaseDirs;
@@ -93,15 +93,39 @@ fn hook(shell: String) -> Result<()> {
     Ok(())
 }
 
+/// Get all environment variables from the given file
+fn get_env_vars_from_file(env: &Path) -> Result<Vec<String>> {
+    let mut env_vars = Vec::new();
+    let env = fs::read_to_string(env).context("Cannot read env file")?;
+    for line in env.lines() {
+        // Ignore comments
+        if line.starts_with('#') {
+            continue;
+        }
+        env_vars.push(line.to_string())
+    }
+    Ok(env_vars)
+}
+
 fn show() -> Result<()> {
     let settings = Settings::load(config_path()?)?;
     let dir = current_dir()?;
-    settings.matching_env_files(&dir).iter().for_each(|env| {
-        println!("Loading {}", env.display());
-    });
+    let env_files = settings.matching_env_files(&dir);
+    for file in &env_files {
+        println!("Loaded from `{}`:", file.display());
+        let vars = get_env_vars_from_file(&file).context("Cannot read env file")?;
+        for var in vars {
+            println!("{}", var);
+        }
+        println!();
+    }
     match settings.matching_patterns(&dir) {
         Some(env) => println!("{}", env.join("\n")),
-        None => println!("envy found no pattern matches for this directory."),
+        None => {
+            if env_files.is_empty() {
+                println!("envy found no pattern matches for this directory.");
+            }
+        }
     };
 
     Ok(())
@@ -124,7 +148,14 @@ fn export(shell: String) -> Result<()> {
         println!("export {}", patterns.join(" "));
     }
     for env_file in settings.matching_env_files(&current_dir()?) {
-        println!("source {}", env_file.display());
+        for var in get_env_vars_from_file(&env_file)? {
+            if var.starts_with("export") {
+                println!("{}", var);
+                continue;
+            }
+
+            println!("export {}", var);
+        }
     }
     Ok(())
 }
