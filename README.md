@@ -91,9 +91,12 @@ SUBCOMMANDS:
     find      Find a single environment variable and print its value
     help      Prints this message or the help of the given subcommand(s)
     hook      Print the hook to activate envy for your shell
+    load      Load environment variables from a given `.env` file (for the current session only)
     path      Print path to envy config file
     show      Show envy config for current directory
 ```
+
+Note: To load the environment variables in the current shell, you need to run `eval "$(envy load)"`.
 
 ## Limitations
 
