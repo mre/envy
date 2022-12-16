@@ -31,6 +31,12 @@ pub enum Command {
     /// Print path to envy config file
     #[structopt(name = "path")]
     Path {},
+    /// Load environment variables from a given `.env` file (for the current session only)
+    #[structopt(name = "load")]
+    Load {
+        #[structopt(parse(from_os_str), default_value = ".env")]
+        env_file: PathBuf,
+    },
     /// Grants envy to load the given `.env` file
     #[structopt(name = "allow")]
     Allow {

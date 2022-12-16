@@ -27,10 +27,21 @@ fn main() -> Result<()> {
         Command::Edit {} => edit(),
         Command::Show {} => show(),
         Command::Find { variable } => find(variable),
+        Command::Load { env_file } => load(env_file),
         Command::Allow { env_file } => allow(env_file),
         Command::Deny { env_file } => deny(env_file),
         Command::Path {} => path(),
     }
+}
+
+/// Export all environment variables from the env file into the current shell
+/// The command is called load because `source` is reserved for potentially
+/// showing the source of an env variable in the future.
+fn load(env_file: PathBuf) -> Result<(), anyhow::Error> {
+    if !env_file.exists() {
+        return Err(anyhow!("File does not exist: {}", env_file.display()));
+    };
+    source(env_file)
 }
 
 /// Get all environment variables currently set
@@ -113,7 +124,7 @@ fn show() -> Result<()> {
     let env_files = settings.matching_env_files(&dir);
     for file in &env_files {
         println!("Loaded from `{}`:", file.display());
-        let vars = get_env_vars_from_file(&file).context("Cannot read env file")?;
+        let vars = get_env_vars_from_file(file).context("Cannot read env file")?;
         for var in vars {
             println!("{}", var);
         }
@@ -139,6 +150,25 @@ fn path() -> Result<()> {
     Ok(())
 }
 
+/// Source the given env file
+/// This will print the commands to stdout that need to be executed to source
+/// the file
+///
+/// This is used by the `envy export` command to source all matching env files
+/// and by `envy load` to source the given env file directly (for the current
+/// session)
+fn source(env_file: PathBuf) -> Result<()> {
+    for var in get_env_vars_from_file(&env_file)? {
+        if var.starts_with("export") {
+            println!("{}", var);
+            continue;
+        }
+
+        println!("export {}", var);
+    }
+    Ok(())
+}
+
 fn export(shell: String) -> Result<()> {
     if shell != *"zsh" {
         todo!("{} not supported yet. You could add support for it!", shell);
@@ -148,14 +178,7 @@ fn export(shell: String) -> Result<()> {
         println!("export {}", patterns.join(" "));
     }
     for env_file in settings.matching_env_files(&current_dir()?) {
-        for var in get_env_vars_from_file(&env_file)? {
-            if var.starts_with("export") {
-                println!("{}", var);
-                continue;
-            }
-
-            println!("export {}", var);
-        }
+        source(env_file)?
     }
     Ok(())
 }
