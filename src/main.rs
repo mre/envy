@@ -41,7 +41,7 @@ fn load(env_file: PathBuf) -> Result<(), anyhow::Error> {
     if !env_file.exists() {
         return Err(anyhow!("File does not exist: {}", env_file.display()));
     };
-    Ok(source(env_file)?)
+    source(env_file)
 }
 
 /// Get all environment variables currently set
@@ -124,7 +124,7 @@ fn show() -> Result<()> {
     let env_files = settings.matching_env_files(&dir);
     for file in &env_files {
         println!("Loaded from `{}`:", file.display());
-        let vars = get_env_vars_from_file(&file).context("Cannot read env file")?;
+        let vars = get_env_vars_from_file(file).context("Cannot read env file")?;
         for var in vars {
             println!("{}", var);
         }
