@@ -96,7 +96,7 @@ SUBCOMMANDS:
     show      Show envy config for current directory
 ```
 
-Note: To load the environment variables in the current shell, you need to run `eval "$(envy load)"`.
+Note: To load the environment variables into the current shell, you need to run `eval "$(envy load)"`.
 
 ## Limitations
 
