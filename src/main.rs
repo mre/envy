@@ -97,6 +97,8 @@ fn edit() -> Result<()> {
 
 fn hook(shell: String) -> Result<()> {
     let hook = match shell.as_ref() {
+        "bash" => hooks::bash::Bash::hook()?,
+        "fish" => hooks::fish::Fish::hook()?,
         "zsh" => Zsh::hook()?,
         _ => return Err(anyhow!("{} is currently not supported", shell)),
     };
@@ -170,15 +172,36 @@ fn source(env_file: PathBuf) -> Result<()> {
 }
 
 fn export(shell: String) -> Result<()> {
-    if shell != *"zsh" {
-        todo!("{} not supported yet. You could add support for it!", shell);
-    }
     let settings = Settings::load(config_path()?)?;
-    if let Some(patterns) = settings.matching_patterns(&current_dir()?) {
-        println!("export {}", patterns.join(" "));
-    }
-    for env_file in settings.matching_env_files(&current_dir()?) {
-        source(env_file)?
-    }
+    match shell.as_ref() {
+        "bash" | "zsh" => {
+            if let Some(patterns) = settings.matching_patterns(&current_dir()?) {
+                println!("export {}", patterns.join(" "));
+            }
+            for env_file in settings.matching_env_files(&current_dir()?) {
+                source(env_file)?
+            }
+        }
+        "fish" => {
+            if let Some(patterns) = settings.matching_patterns(&current_dir()?) {
+                // patterns is a vec of environment variables, which need to be exported
+                // e.g. ["FOO=bar", "BAR=baz"]
+                // fish needs to be told to export each variable individually
+                // e.g. "set -gx FOO bar"
+                for pattern in patterns {
+                    if let Some((var, value)) = pattern.split_once('=') {
+                        println!("set -gx {} {}", var, value);
+                    }
+                }
+            };
+            for env_file in settings.matching_env_files(&current_dir()?) {
+                let vars = get_env_vars_from_file(&env_file)?;
+                for var in vars {
+                    println!("set -gx {} (string split ' ' '{}')", var, var);
+                }
+            }
+        }
+        _ => return Err(anyhow!("{} is currently not supported", shell)),
+    };
     Ok(())
 }
