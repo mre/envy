@@ -1,6 +1,7 @@
 # envy
 
-...sets environment variables when you enter a directory.
+Sets environment variables when you enter a directory.
+Works with bash, zsh, and fish.
 
 [![Documentation](https://docs.rs/envy-cli/badge.svg)](https://docs.rs/envy-cli/)
 ![Rust](https://github.com/mre/envy/workflows/Rust/badge.svg)
@@ -28,8 +29,20 @@ cargo install envy-cli
 
 Add the following line to the end of your `~/.zshrc` file:
 
-```
+```zsh
 eval "$(envy hook zsh)"
+```
+
+For bash, use `envy hook bash` instead and add it to your `~/.bashrc` file.
+
+```bash
+eval "$(envy hook bash)"
+```
+
+For fish, use `envy hook fish` instead and add it to your `~/.config/fish/config.fish` file.
+
+```fish
+eval (envy hook fish)
 ```
 
 Once you open a new shell, `envy` will start matching directories and set the specified
@@ -100,7 +113,6 @@ Note: To load the environment variables into the current shell, you need to run 
 
 ## Limitations
 
-- Only zsh supported for now.
 - Only tested on macOS. It should also work on Linux and Windows, though.
 - Does not unset variables when you leave a directory.
 - Developing this for myself. Thus, this project won't be worked on very actively.
