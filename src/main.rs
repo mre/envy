@@ -52,8 +52,8 @@ fn find(variable: String) -> Result<(), anyhow::Error> {
         .map(|(_, value)| value);
 
     match value {
-        Some(value) => println!("{}", value),
-        None => println!("Variable {} not found", variable),
+        Some(value) => println!("{value}"),
+        None => println!("Variable {variable} not found"),
     }
 
     Ok(())
@@ -102,7 +102,7 @@ fn hook(shell: String) -> Result<()> {
         "zsh" => Zsh::hook()?,
         _ => return Err(anyhow!("{} is currently not supported", shell)),
     };
-    println!("{}", hook);
+    println!("{hook}");
     Ok(())
 }
 
@@ -128,7 +128,7 @@ fn show() -> Result<()> {
         println!("Loaded from `{}`:", file.display());
         let vars = get_env_vars_from_file(file).context("Cannot read env file")?;
         for var in vars {
-            println!("{}", var);
+            println!("{var}");
         }
         println!();
     }
@@ -162,11 +162,11 @@ fn path() -> Result<()> {
 fn source(env_file: PathBuf) -> Result<()> {
     for var in get_env_vars_from_file(&env_file)? {
         if var.starts_with("export") {
-            println!("{}", var);
+            println!("{var}");
             continue;
         }
 
-        println!("export {}", var);
+        println!("export {var}");
     }
     Ok(())
 }
@@ -190,14 +190,14 @@ fn export(shell: String) -> Result<()> {
                 // e.g. "set -gx FOO bar"
                 for pattern in patterns {
                     if let Some((var, value)) = pattern.split_once('=') {
-                        println!("set -gx {} {}", var, value);
+                        println!("set -gx {var} {value}");
                     }
                 }
             };
             for env_file in settings.matching_env_files(&current_dir()?) {
                 let vars = get_env_vars_from_file(&env_file)?;
                 for var in vars {
-                    println!("set -gx {} (string split ' ' '{}')", var, var);
+                    println!("set -gx {var} (string split ' ' '{var}')");
                 }
             }
         }
