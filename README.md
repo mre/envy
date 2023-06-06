@@ -39,19 +39,20 @@ For bash, use `envy hook bash` instead and add it to your `~/.bashrc` file.
 eval "$(envy hook bash)"
 ```
 
-For fish, use `envy hook fish` instead and add it to your `~/.config/fish/config.fish` file.
+For fish, use `envy hook fish` instead and add it to your
+`~/.config/fish/config.fish` file.
 
 ```fish
 eval (envy hook fish)
 ```
 
-Once you open a new shell, `envy` will start matching directories and set the specified
-environment variables from the config file.
+Once you open a new shell, `envy` will start matching directories and set the
+specified environment variables from the config file.
 
 ## Usage
 
-Run `envy edit` to open the config file.
-(On macOS, this file is located at `/Users/<user>/Library/Application Support/Envy/Config.toml`.)
+Run `envy edit` to open the config file. (On macOS, this file is located at
+`/Users/<user>/Library/Application Support/Envy/Config.toml`.)
 
 Define the list of regular expressions and the settings.
 The first regular expression that matches a path wins.
@@ -72,16 +73,17 @@ env = [
 ]
 ```
 
-The moment you save the file, the current terminal will automatically pick up the new settings;
-no need to reload or open a new terminal. :v:
+The moment you save the file, the current terminal will automatically pick up
+the new settings; no need to reload or open a new terminal. :v:
 
 ## direnv compatibility
 
-`envy` supports loading environment files à la `direnv` as well. Run `envy allow .env` to auto-load the `.env` file in the current path on enter. You can add
+`envy` supports loading environment files à la `direnv` as well. Run `envy allow
+.env` to auto-load the `.env` file in the current path on enter. You can add
 multiple `.env` files (e.g. `envy allow .envrc`). Duplicate keys will be
 overwritten in the order of appearance in the envy config file (run `envy edit`
-to modify order).
-Use `envy deny .env` to remove an environment file from the list.
+to modify order). Use `envy deny .env` to remove an environment file from the
+list.
 
 ## Command-line options
 
