@@ -1,13 +1,13 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 
 mod hooks;
 mod opt;
 mod settings;
 
+use clap::Parser;
 use std::path::{Path, PathBuf};
 use std::process;
 use std::{env::current_dir, fs};
-use structopt::StructOpt;
 
 use directories::BaseDirs;
 use hooks::zsh::Zsh;
@@ -20,64 +20,63 @@ fn config_path() -> Result<PathBuf> {
 }
 
 fn main() -> Result<()> {
-    let opt = Envy::from_args();
+    let opt = Envy::parse();
     match opt.cmd {
         Command::Hook { shell } => hook(shell),
         Command::Export { shell } => export(shell),
-        Command::Edit {} => edit(),
-        Command::Show {} => show(),
+        Command::Edit => edit(),
+        Command::Show => show(),
         Command::Find { variable } => find(variable),
         Command::Load { env_file } => load(env_file),
         Command::Allow { env_file } => allow(env_file),
         Command::Deny { env_file } => deny(env_file),
-        Command::Path {} => path(),
+        Command::Path => path(),
     }
 }
 
 /// Export all environment variables from the env file into the current shell
 /// The command is called load because `source` is reserved for potentially
 /// showing the source of an env variable in the future.
-fn load(env_file: PathBuf) -> Result<(), anyhow::Error> {
-    if !env_file.exists() {
-        return Err(anyhow!("File does not exist: {}", env_file.display()));
-    };
+fn load(env_file: PathBuf) -> Result<()> {
+    anyhow::ensure!(
+        env_file.exists(),
+        "File does not exist: {}",
+        env_file.display()
+    );
     source(env_file)
 }
 
 /// Get all environment variables currently set
 /// and return the value of the given variable
-fn find(variable: String) -> Result<(), anyhow::Error> {
-    let value = std::env::vars()
-        .find(|(key, _)| key == &variable)
-        .map(|(_, value)| value);
-
-    match value {
-        Some(value) => println!("{value}"),
-        None => println!("Variable {variable} not found"),
+fn find(variable: String) -> Result<()> {
+    match std::env::var(&variable) {
+        Ok(value) => println!("{value}"),
+        Err(_) => println!("Variable {variable} not found"),
     }
-
     Ok(())
 }
 
 fn deny(env_file: PathBuf) -> Result<()> {
-    if !env_file.exists() {
-        return Err(anyhow!("File does not exist: {}", env_file.display()));
-    };
+    anyhow::ensure!(
+        env_file.exists(),
+        "File does not exist: {}",
+        env_file.display()
+    );
     let mut settings = Settings::load(config_path()?)?;
-    // Get full path to env file
     let env_file = env_file.canonicalize()?;
     settings.remove_env(env_file);
     Settings::save(config_path()?, settings)
 }
 
-// Add the current directory to the list of allowed paths.
-// The `.env` file will be loaded automatically on dir enter.
+/// Add the current directory to the list of allowed paths.
+/// The `.env` file will be loaded automatically on dir enter.
 fn allow(env_file: PathBuf) -> Result<()> {
-    if !env_file.exists() {
-        return Err(anyhow!("File does not exist: {}", env_file.display()));
-    };
+    anyhow::ensure!(
+        env_file.exists(),
+        "File does not exist: {}",
+        env_file.display()
+    );
     let mut settings = Settings::load(config_path()?)?;
-    // Get full path to env file
     let env_file = env_file.canonicalize()?;
     settings.add_env(env_file);
     Settings::save(config_path()?, settings)
@@ -110,13 +109,11 @@ fn hook(shell: String) -> Result<()> {
 fn get_env_vars_from_file(env: &Path) -> Result<Vec<String>> {
     let mut env_vars = Vec::new();
     let env = fs::read_to_string(env).context("Cannot read env file")?;
-    for line in env.lines() {
-        // Ignore comments
-        if line.starts_with('#') {
-            continue;
-        }
-        env_vars.push(line.to_string())
-    }
+    env_vars.extend(
+        env.lines()
+            .filter(|line| !line.starts_with('#'))
+            .map(String::from),
+    );
     Ok(env_vars)
 }
 
