@@ -37,24 +37,21 @@ impl EnvySettings {
 
     pub fn matching_patterns(&self, dir: &Path) -> Option<Vec<String>> {
         let path_str = dir.to_string_lossy();
-        for path in self.paths.as_ref()? {
-            if path.pattern.is_match(&path_str) {
-                return Some(path.env.clone());
-            }
-        }
-        None
+        self.paths
+            .as_ref()?
+            .iter()
+            .find(|path| path.pattern.is_match(&path_str))
+            .map(|path| path.env.clone())
     }
 
-    // get all env files in dir and parent directory
+    /// Get all env files in dir and parent directory
     pub fn matching_env_files(&self, dir: &Path) -> Vec<PathBuf> {
-        self.envs.iter().flatten().filter(|env|
-            // check if env file is in dir
-            if let Some(env_dir) = env.parent() {
-                dir.starts_with(env_dir)
-            } else {
-                false
-            }
-        ).cloned().collect()
+        self.envs
+            .iter()
+            .flatten()
+            .filter(|env| env.parent().is_some_and(|env_dir| dir.starts_with(env_dir)))
+            .cloned()
+            .collect()
     }
 }
 
