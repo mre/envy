@@ -50,11 +50,8 @@ jobs:
     - name: Build
       run: cargo build --verbose
       
-    - name: Run unit tests
-      run: cargo test --verbose --lib
-      
-    - name: Run integration tests
-      run: cargo test --verbose --test cli
+    - name: Run tests
+      run: cargo test --verbose
 
   security:
     name: Security audit
