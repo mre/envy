@@ -2,6 +2,7 @@
 
 Sets environment variables when you enter a directory.
 Works with bash, zsh, and fish.
+Tested on macOS, Linux, and Windows.
 
 [![Documentation](https://docs.rs/envy-cli/badge.svg)](https://docs.rs/envy-cli/)
 ![Rust](https://github.com/mre/envy/workflows/Rust/badge.svg)
@@ -115,7 +116,6 @@ Note: To load the environment variables into the current shell, you need to run 
 
 ## Limitations
 
-- Only tested on macOS. It should also work on Linux and Windows, though.
 - Does not unset variables when you leave a directory.
 - Developing this for myself. Thus, this project won't be worked on very actively.
 
