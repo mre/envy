@@ -105,7 +105,7 @@ The JSON format matches direnv's output exactly: `{"KEY": "value"}` where each e
 
 ## Command-line Options
 
-```sh
+```
 Usage: envy <COMMAND>
 
 Commands:
