@@ -86,6 +86,23 @@ overwritten in the order of appearance in the envy config file (run `envy edit`
 to modify order). Use `envy deny .env` to remove an environment file from the
 list.
 
+### JSON Export
+
+`envy` can export environment variables in JSON format, making it a drop-in replacement for `direnv export json`. This is particularly useful for integration with tools like Nushell and Zed:
+
+```bash
+# Export environment variables as JSON
+envy export json
+
+# Use with Nushell (as direnv replacement)
+envy export json | from json | load-env
+
+# Use with jq for processing
+envy export json | jq .
+```
+
+The JSON format matches direnv's output exactly: `{"KEY": "value"}` where each environment variable becomes a key-value pair in the JSON object.
+
 ## Command-line options
 
 ```
@@ -103,7 +120,7 @@ SUBCOMMANDS:
     allow     Grants envy to load the given `.env` file
     deny      Revokes the authorization of a given `.env` file
     edit      Edit the envy config file
-    export    Export environment variables based on the current directory
+    export    Export environment variables based on the current directory (supports: bash, zsh, fish, json)
     find      Find a single environment variable and print its value
     help      Prints this message or the help of the given subcommand(s)
     hook      Print the hook to activate envy for your shell

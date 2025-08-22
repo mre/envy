@@ -14,11 +14,11 @@ check: ## Run cargo check
 
 .PHONY: test
 test: ## Run tests
-	cargo test
+	cargo test -- --test-threads=1
 
 .PHONY: test-integration
 test-integration: ## Run integration tests only
-	cargo test --test cli
+	cargo test --test cli -- --test-threads=1
 
 .PHONY: clippy
 clippy: ## Run clippy lints

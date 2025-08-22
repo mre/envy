@@ -20,6 +20,7 @@ path = "src/main.rs"
 clap = { version = "4.5", features = ["derive"] }
 config = "0.15.14"
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 regex = "1.11"
 serde_regex = "1.1"
 anyhow = "1.0"
@@ -28,3 +29,23 @@ toml = "0.8"
 
 [dev-dependencies]
 tempfile = "3.21"
+
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"
+match_same_arms = { level = "allow", priority = 1 }
+missing_const_for_fn = "warn"
+
+[workspace.lints.rust]
+absolute_paths_not_starting_with_crate = "warn"
+anonymous_parameters = "deny"
+macro_use_extern_crate = "deny"
+missing_copy_implementations = "warn"
+missing_debug_implementations = "warn"
+invalid_html_tags = "warn"
+semicolon_in_expressions_from_macros = "warn"
+unreachable_pub = "warn"
+unused_extern_crates = "warn"
+variant_size_differences = "warn"
+# TODO: Enable the check for missing documentation in the future
+#missing_docs = "deny"

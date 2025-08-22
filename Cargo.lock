@@ -293,6 +293,7 @@ dependencies = [
  "directories",
  "regex",
  "serde",
+ "serde_json",
  "serde_regex",
  "tempfile",
  "toml 0.8.23",
