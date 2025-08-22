@@ -108,6 +108,11 @@ impl Settings {
 
     /// Save settings to the given config path as TOML
     pub fn save(config_path: PathBuf, settings: EnvySettings) -> Result<()> {
+        // Create parent directory if it doesn't exist
+        if let Some(parent) = config_path.parent() {
+            fs::create_dir_all(parent).context("Cannot create config directory")?;
+        }
+        
         let toml = toml::to_string_pretty(&settings).context("Cannot serialize config")?;
         fs::write(config_path, toml).context("Cannot write config")
     }
