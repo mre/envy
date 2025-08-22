@@ -157,6 +157,16 @@ fn test_export_json_with_env_file() {
     assert!(json.is_object());
     let obj = json.as_object().unwrap();
 
+    // Debug output for Windows CI
+    if obj.is_empty() || !obj.contains_key("TEST_VAR") {
+        eprintln!("JSON output: {}", stdout);
+        eprintln!("Available keys: {:?}", obj.keys().collect::<Vec<_>>());
+        eprintln!(
+            "Expected TEST_VAR but found keys: {:?}",
+            obj.keys().collect::<Vec<_>>()
+        );
+    }
+
     // Check that our variables are present
     assert_eq!(
         obj.get("TEST_VAR").unwrap().as_str().unwrap(),
@@ -232,6 +242,16 @@ fn test_export_json_format_compatibility() {
     // Verify it's valid JSON
     let json: Value = serde_json::from_str(&stdout).expect("Invalid JSON output");
     let obj = json.as_object().unwrap();
+
+    // Debug output for Windows CI
+    if obj.is_empty() || !obj.contains_key("SIMPLE_VAR") {
+        eprintln!("JSON output: {}", stdout);
+        eprintln!("Available keys: {:?}", obj.keys().collect::<Vec<_>>());
+        eprintln!(
+            "Expected SIMPLE_VAR but found keys: {:?}",
+            obj.keys().collect::<Vec<_>>()
+        );
+    }
 
     // Test various edge cases
     assert_eq!(obj.get("SIMPLE_VAR").unwrap().as_str().unwrap(), "value");
