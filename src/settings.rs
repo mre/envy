@@ -88,11 +88,20 @@ pub(crate) struct Settings;
 
 impl Settings {
     /// Load settings from the given config path
+    /// Returns default empty settings if the config file doesn't exist
     pub fn load(config_path: PathBuf) -> Result<EnvySettings> {
+        // If config file doesn't exist, return default empty settings
+        if !config_path.exists() {
+            return Ok(EnvySettings {
+                envs: None,
+                paths: None,
+            });
+        }
+
         config::Config::builder()
             .add_source(config::File::from(config_path))
             .build()
-            .context("Cannot not read config")?
+            .context("Cannot read config")?
             .try_deserialize::<EnvySettings>()
             .context("Cannot deserialize config")
     }
