@@ -1,0 +1,31 @@
+# Clippy configuration for envy
+# This file contains restrictive linting rules to maintain high code quality
+
+# Performance lints
+avoid-breaking-exported-api = false
+msrv = "1.85"
+
+# Restriction lints (most restrictive category)
+disallowed-macros = [
+    "std::print",
+    "std::eprint", 
+]
+disallowed-methods = [
+    "std::env::var",  # Prefer std::env::var_os for better error handling
+]
+
+# Documentation requirements
+missing_docs_in_private_items = true
+
+# Complexity restrictions  
+cognitive-complexity-threshold = 25
+type-complexity-threshold = 100
+
+# Style preferences
+enum-variant-name-threshold = 3
+single-char-binding-names-threshold = 2
+trivial-copy-pass-by-ref = true
+
+# Safety and correctness
+allow-expect-in-tests = true
+allow-unwrap-in-tests = true

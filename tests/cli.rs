@@ -1,7 +1,7 @@
+use serde_json::Value;
 use std::fs;
 use std::process::Command;
 use tempfile::TempDir;
-use serde_json::Value;
 
 /// Test that the path command works
 #[test]
@@ -136,7 +136,7 @@ fn test_export_json_with_env_file() {
         .arg(&env_file)
         .output()
         .expect("Failed to execute allow command");
-    
+
     assert!(allow_output.status.success());
 
     // Test JSON export
@@ -149,26 +149,35 @@ fn test_export_json_with_env_file() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    
+
     // Parse the JSON output
     let json: Value = serde_json::from_str(&stdout).expect("Invalid JSON output");
-    
+
     // Verify it's a JSON object
     assert!(json.is_object());
     let obj = json.as_object().unwrap();
-    
+
     // Check that our variables are present
-    assert_eq!(obj.get("TEST_VAR").unwrap().as_str().unwrap(), "hello_world");
+    assert_eq!(
+        obj.get("TEST_VAR").unwrap().as_str().unwrap(),
+        "hello_world"
+    );
     assert_eq!(obj.get("API_KEY").unwrap().as_str().unwrap(), "secret123");
-    assert_eq!(obj.get("DATABASE_URL").unwrap().as_str().unwrap(), "postgres://localhost/test");
-    assert_eq!(obj.get("ANOTHER_VAR").unwrap().as_str().unwrap(), "with_export");
+    assert_eq!(
+        obj.get("DATABASE_URL").unwrap().as_str().unwrap(),
+        "postgres://localhost/test"
+    );
+    assert_eq!(
+        obj.get("ANOTHER_VAR").unwrap().as_str().unwrap(),
+        "with_export"
+    );
 }
 
 /// Test JSON export returns empty object when no env files match
 #[test]
 fn test_export_json_empty_directory() {
     let temp_dir = TempDir::new().expect("Failed to create temp dir");
-    
+
     let output = Command::new(env!("CARGO_BIN_EXE_envy"))
         .current_dir(&temp_dir)
         .arg("export")
@@ -178,10 +187,10 @@ fn test_export_json_empty_directory() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    
+
     // Parse the JSON output
     let json: Value = serde_json::from_str(&stdout).expect("Invalid JSON output");
-    
+
     // Should be an empty object
     assert!(json.is_object());
     let obj = json.as_object().unwrap();
@@ -207,7 +216,7 @@ fn test_export_json_format_compatibility() {
         .arg(&env_file)
         .output()
         .expect("Failed to execute allow command");
-    
+
     assert!(allow_output.status.success());
 
     let output = Command::new(env!("CARGO_BIN_EXE_envy"))
@@ -219,18 +228,29 @@ fn test_export_json_format_compatibility() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    
+
     // Verify it's valid JSON
     let json: Value = serde_json::from_str(&stdout).expect("Invalid JSON output");
     let obj = json.as_object().unwrap();
-    
+
     // Test various edge cases
     assert_eq!(obj.get("SIMPLE_VAR").unwrap().as_str().unwrap(), "value");
-    assert_eq!(obj.get("VAR_WITH_SPACES").unwrap().as_str().unwrap(), "value with spaces");
-    assert_eq!(obj.get("VAR_WITH_QUOTES").unwrap().as_str().unwrap(), "\"quoted value\"");
-    assert_eq!(obj.get("VAR_WITH_EQUALS").unwrap().as_str().unwrap(), "key=value=more");
+    assert_eq!(
+        obj.get("VAR_WITH_SPACES").unwrap().as_str().unwrap(),
+        "value with spaces"
+    );
+    assert_eq!(
+        obj.get("VAR_WITH_QUOTES").unwrap().as_str().unwrap(),
+        "\"quoted value\""
+    );
+    assert_eq!(
+        obj.get("VAR_WITH_EQUALS").unwrap().as_str().unwrap(),
+        "key=value=more"
+    );
     assert_eq!(obj.get("EMPTY_VAR").unwrap().as_str().unwrap(), "");
-    
+
     // Ensure the JSON is compact (no pretty printing)
-    assert!(!stdout.contains('\n') || stdout.trim_end().chars().filter(|&c| c == '\n').count() <= 1);
+    assert!(
+        !stdout.contains('\n') || stdout.trim_end().chars().filter(|&c| c == '\n').count() <= 1
+    );
 }
