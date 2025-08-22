@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(name = "envy", about = "context-based environment variables")]
+#[command(name = "envy", about = "context-based environment variables", version)]
 pub struct Envy {
     #[command(subcommand)]
     pub cmd: Command,

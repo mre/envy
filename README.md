@@ -103,30 +103,26 @@ envy export json | jq .
 
 The JSON format matches direnv's output exactly: `{"KEY": "value"}` where each environment variable becomes a key-value pair in the JSON object.
 
-## Command-line options
+## Command-line Options
 
 ```
-envy 0.4.0
-context-based environment variables
+Usage: envy <COMMAND>
 
-USAGE:
-    envy <SUBCOMMAND>
+Commands:
+  export  Export environment variables based on the current directory
+  hook    Print the hook to activate envy for your shell
+  edit    Edit the envy config file
+  show    Show envy config for current directory
+  find    Find a single environment variable and print its value
+  path    Print path to envy config file
+  load    Load environment variables from a given `.env` file (for the current session only)
+  allow   Grants envy to load the given `.env` file
+  deny    Revokes the authorization of a given `.env` file
+  help    Print this message or the help of the given subcommand(s)
 
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
-SUBCOMMANDS:
-    allow     Grants envy to load the given `.env` file
-    deny      Revokes the authorization of a given `.env` file
-    edit      Edit the envy config file
-    export    Export environment variables based on the current directory (supports: bash, zsh, fish, json)
-    find      Find a single environment variable and print its value
-    help      Prints this message or the help of the given subcommand(s)
-    hook      Print the hook to activate envy for your shell
-    load      Load environment variables from a given `.env` file (for the current session only)
-    path      Print path to envy config file
-    show      Show envy config for current directory
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
 ```
 
 Note: To load the environment variables into the current shell, you need to run `eval "$(envy load)"`.
