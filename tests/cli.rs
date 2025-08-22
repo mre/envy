@@ -137,7 +137,12 @@ fn test_export_json_with_env_file() {
         .output()
         .expect("Failed to execute allow command");
 
-    assert!(allow_output.status.success());
+    if !allow_output.status.success() {
+        eprintln!("Allow command failed with exit code: {:?}", allow_output.status.code());
+        eprintln!("stdout: {}", String::from_utf8_lossy(&allow_output.stdout));
+        eprintln!("stderr: {}", String::from_utf8_lossy(&allow_output.stderr));
+        panic!("allow command failed");
+    }
 
     // Test JSON export
     let output = Command::new(env!("CARGO_BIN_EXE_envy"))
@@ -147,7 +152,12 @@ fn test_export_json_with_env_file() {
         .output()
         .expect("Failed to execute export json command");
 
-    assert!(output.status.success());
+    if !output.status.success() {
+        eprintln!("Export json command failed with exit code: {:?}", output.status.code());
+        eprintln!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+        panic!("export json command failed");
+    }
     let stdout = String::from_utf8_lossy(&output.stdout);
 
     // Parse the JSON output
@@ -185,7 +195,12 @@ fn test_export_json_empty_directory() {
         .output()
         .expect("Failed to execute export json command");
 
-    assert!(output.status.success());
+    if !output.status.success() {
+        eprintln!("Command failed with exit code: {:?}", output.status.code());
+        eprintln!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+        panic!("export json command failed");
+    }
     let stdout = String::from_utf8_lossy(&output.stdout);
 
     // Parse the JSON output
@@ -217,7 +232,12 @@ fn test_export_json_format_compatibility() {
         .output()
         .expect("Failed to execute allow command");
 
-    assert!(allow_output.status.success());
+    if !allow_output.status.success() {
+        eprintln!("Allow command failed with exit code: {:?}", allow_output.status.code());
+        eprintln!("stdout: {}", String::from_utf8_lossy(&allow_output.stdout));
+        eprintln!("stderr: {}", String::from_utf8_lossy(&allow_output.stderr));
+        panic!("allow command failed");
+    }
 
     let output = Command::new(env!("CARGO_BIN_EXE_envy"))
         .current_dir(&temp_dir)
@@ -226,7 +246,12 @@ fn test_export_json_format_compatibility() {
         .output()
         .expect("Failed to execute export json command");
 
-    assert!(output.status.success());
+    if !output.status.success() {
+        eprintln!("Export json command failed with exit code: {:?}", output.status.code());
+        eprintln!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+        panic!("export json command failed");
+    }
     let stdout = String::from_utf8_lossy(&output.stdout);
 
     // Verify it's valid JSON
