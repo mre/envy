@@ -138,7 +138,10 @@ fn test_export_json_with_env_file() {
         .expect("Failed to execute allow command");
 
     if !allow_output.status.success() {
-        eprintln!("Allow command failed with exit code: {:?}", allow_output.status.code());
+        eprintln!(
+            "Allow command failed with exit code: {:?}",
+            allow_output.status.code()
+        );
         eprintln!("stdout: {}", String::from_utf8_lossy(&allow_output.stdout));
         eprintln!("stderr: {}", String::from_utf8_lossy(&allow_output.stderr));
         panic!("allow command failed");
@@ -153,7 +156,10 @@ fn test_export_json_with_env_file() {
         .expect("Failed to execute export json command");
 
     if !output.status.success() {
-        eprintln!("Export json command failed with exit code: {:?}", output.status.code());
+        eprintln!(
+            "Export json command failed with exit code: {:?}",
+            output.status.code()
+        );
         eprintln!("stdout: {}", String::from_utf8_lossy(&output.stdout));
         eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
         panic!("export json command failed");
@@ -233,7 +239,10 @@ fn test_export_json_format_compatibility() {
         .expect("Failed to execute allow command");
 
     if !allow_output.status.success() {
-        eprintln!("Allow command failed with exit code: {:?}", allow_output.status.code());
+        eprintln!(
+            "Allow command failed with exit code: {:?}",
+            allow_output.status.code()
+        );
         eprintln!("stdout: {}", String::from_utf8_lossy(&allow_output.stdout));
         eprintln!("stderr: {}", String::from_utf8_lossy(&allow_output.stderr));
         panic!("allow command failed");
@@ -247,7 +256,10 @@ fn test_export_json_format_compatibility() {
         .expect("Failed to execute export json command");
 
     if !output.status.success() {
-        eprintln!("Export json command failed with exit code: {:?}", output.status.code());
+        eprintln!(
+            "Export json command failed with exit code: {:?}",
+            output.status.code()
+        );
         eprintln!("stdout: {}", String::from_utf8_lossy(&output.stdout));
         eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
         panic!("export json command failed");
