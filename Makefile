@@ -45,5 +45,10 @@ clean: ## Clean build artifacts
 release: ## Build release version
 	cargo build --release
 
+.PHONY: publish
+publish: ci release ## Publish to crates.io (runs CI checks first)
+	@echo "Publishing envy to crates.io..."
+	cargo publish
+
 .PHONY: ci
 ci: check test clippy fmt ## Run all CI checks
