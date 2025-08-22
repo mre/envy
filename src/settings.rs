@@ -60,11 +60,31 @@ impl EnvySettings {
     }
 
     /// Get all env files in dir and parent directory
+    ///
+    /// Returns a list of all environment files that match the configured
+    /// environment files in the given directory or its parent directories.
+    ///
+    /// Note: we canonicalize both paths to ensure proper comparison, as Windows
+    /// paths can be case-insensitive.
     pub fn matching_env_files(&self, dir: &Path) -> Vec<PathBuf> {
         self.envs
             .iter()
             .flatten()
-            .filter(|env| env.parent().is_some_and(|env_dir| dir.starts_with(env_dir)))
+            .filter(|env| {
+                env.parent().is_some_and(|env_dir| {
+                    // Paths can be case-insensitive (e.g. on Windows), so we
+                    // canonicalize both the current directory and the env file
+                    // directory for correct comparison. This is cross-platform
+                    // compatible.
+                    let current_canonical =
+                        dir.canonicalize().unwrap_or_else(|_| dir.to_path_buf());
+                    let env_canonical = env_dir
+                        .canonicalize()
+                        .unwrap_or_else(|_| env_dir.to_path_buf());
+                    current_canonical == env_canonical
+                        || current_canonical.starts_with(&env_canonical)
+                })
+            })
             .cloned()
             .collect()
     }

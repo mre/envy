@@ -161,6 +161,8 @@ fn test_export_json_with_env_file() {
     if obj.is_empty() || !obj.contains_key("TEST_VAR") {
         eprintln!("JSON output: {}", stdout);
         eprintln!("Available keys: {:?}", obj.keys().collect::<Vec<_>>());
+        eprintln!("Current directory: {:?}", temp_dir);
+        eprintln!("Env file path: {:?}", env_file);
         eprintln!(
             "Expected TEST_VAR but found keys: {:?}",
             obj.keys().collect::<Vec<_>>()
@@ -247,6 +249,8 @@ fn test_export_json_format_compatibility() {
     if obj.is_empty() || !obj.contains_key("SIMPLE_VAR") {
         eprintln!("JSON output: {}", stdout);
         eprintln!("Available keys: {:?}", obj.keys().collect::<Vec<_>>());
+        eprintln!("Current directory: {:?}", temp_dir);
+        eprintln!("Env file path: {:?}", env_file);
         eprintln!(
             "Expected SIMPLE_VAR but found keys: {:?}",
             obj.keys().collect::<Vec<_>>()
