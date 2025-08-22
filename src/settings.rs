@@ -112,7 +112,7 @@ impl Settings {
         if let Some(parent) = config_path.parent() {
             fs::create_dir_all(parent).context("Cannot create config directory")?;
         }
-        
+
         let toml = toml::to_string_pretty(&settings).context("Cannot serialize config")?;
         fs::write(config_path, toml).context("Cannot write config")
     }
