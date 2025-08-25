@@ -140,10 +140,10 @@ pub fn is_bash_available() -> bool {
 mod tests {
     use super::*;
 
-    #[cfg(feature = "bash-support")]
+    #[cfg(all(test, unix, feature = "bash-support"))]
     use std::fs;
 
-    #[cfg(feature = "bash-support")]
+    #[cfg(all(test, unix, feature = "bash-support"))]
     use tempfile::TempDir;
 
     #[test]
