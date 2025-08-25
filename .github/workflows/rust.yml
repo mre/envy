@@ -50,10 +50,10 @@ jobs:
       run: cargo clippy --all-targets --all-features -- -D warnings
       
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --verbose --features bash-support
       
     - name: Run tests
-      run: cargo test --verbose -- --test-threads=1
+      run: cargo test --verbose --features bash-support -- --test-threads=1
 
   security:
     name: Security audit

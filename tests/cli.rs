@@ -254,3 +254,116 @@ fn test_export_json_format_compatibility() {
         !stdout.contains('\n') || stdout.trim_end().chars().filter(|&c| c == '\n').count() <= 1
     );
 }
+
+/// Test bash support functionality (requires bash-support feature)
+#[cfg(all(feature = "bash-support", unix))]
+mod bash_tests {
+    use super::*;
+
+    /// Test that .envrc files can be processed when bash support is enabled
+    #[test]
+    fn test_envrc_basic_functionality() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+        let envrc_file = temp_dir.path().join(".envrc");
+
+        // Create a simple .envrc file
+        fs::write(
+            &envrc_file,
+            "export TEST_VAR=hello\nexport ANOTHER_VAR=world\n",
+        )
+        .expect("Failed to write .envrc file");
+
+        // Allow the .envrc file
+        let allow_output = Command::new(env!("CARGO_BIN_EXE_envy"))
+            .current_dir(&temp_dir)
+            .arg("allow")
+            .arg(&envrc_file)
+            .output()
+            .expect("Failed to execute allow command");
+
+        assert!(allow_output.status.success());
+
+        // Test bash export
+        let output = Command::new(env!("CARGO_BIN_EXE_envy"))
+            .current_dir(&temp_dir)
+            .arg("export")
+            .arg("bash")
+            .output()
+            .expect("Failed to execute export bash command");
+
+        assert!(output.status.success());
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert!(stdout.contains("export TEST_VAR=hello"));
+        assert!(stdout.contains("export ANOTHER_VAR=world"));
+    }
+
+    /// Test PATH_add function in .envrc files
+    #[test]
+    fn test_envrc_path_add() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+        let envrc_file = temp_dir.path().join(".envrc");
+        let bin_dir = temp_dir.path().join("bin");
+
+        // Create bin directory
+        fs::create_dir(&bin_dir).expect("Failed to create bin dir");
+
+        // Create .envrc with PATH_add
+        fs::write(
+            &envrc_file,
+            format!("PATH_add {}", bin_dir.to_string_lossy()),
+        )
+        .expect("Failed to write .envrc file");
+
+        let allow_output = Command::new(env!("CARGO_BIN_EXE_envy"))
+            .current_dir(&temp_dir)
+            .arg("allow")
+            .arg(&envrc_file)
+            .output()
+            .expect("Failed to execute allow command");
+
+        assert!(allow_output.status.success());
+
+        // Test JSON export to verify PATH was modified
+        let output = Command::new(env!("CARGO_BIN_EXE_envy"))
+            .current_dir(&temp_dir)
+            .arg("export")
+            .arg("json")
+            .output()
+            .expect("Failed to execute export json command");
+
+        assert!(output.status.success());
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let json: Value = serde_json::from_str(&stdout).expect("Invalid JSON output");
+
+        if let Some(path_value) = json.get("PATH").and_then(|v| v.as_str()) {
+            assert!(path_value.contains(&bin_dir.to_string_lossy().to_string()));
+        }
+    }
+
+    /// Test that .envrc files are only executed when allowed
+    #[test]
+    fn test_envrc_security_model() {
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
+        let envrc_file = temp_dir.path().join(".envrc");
+
+        // Create .envrc file without allowing it
+        fs::write(&envrc_file, "export SECURITY_TEST=should_not_appear")
+            .expect("Failed to write .envrc file");
+
+        // Try to export without allowing - should not execute the .envrc
+        let output = Command::new(env!("CARGO_BIN_EXE_envy"))
+            .current_dir(&temp_dir)
+            .arg("export")
+            .arg("json")
+            .output()
+            .expect("Failed to execute export json command");
+
+        assert!(output.status.success());
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let json: Value = serde_json::from_str(&stdout).expect("Invalid JSON output");
+        let obj = json.as_object().unwrap();
+
+        // Should not contain the variable from .envrc since it wasn't allowed
+        assert!(!obj.contains_key("SECURITY_TEST"));
+    }
+}

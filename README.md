@@ -103,6 +103,38 @@ envy export json | jq .
 
 The JSON format matches direnv's output exactly: `{"KEY": "value"}` where each environment variable becomes a key-value pair in the JSON object.
 
+### Bash Environment File Support (Feature Flag)
+
+`envy` includes experimental support for executing `.envrc` files (bash scripts) similar to direnv. This feature is disabled by default and must be enabled during compilation. The pre-built binaries include this feature by default.
+
+**Enable bash support:**
+```bash
+cargo build --features bash-support
+```
+
+**Features included:**
+- Execute `.envrc` files as bash scripts via subprocess
+- Complete direnv stdlib support: `PATH_add`, `dotenv`, `layout`, `use`, etc.
+- Secure execution model requiring explicit file approval
+- Full compatibility with existing direnv `.envrc` files
+- Uses the official direnv stdlib from [direnv/direnv](https://github.com/direnv/direnv/blob/5ffdaec7eed3ac7d6bdfe2dd098437233c78d0dc/stdlib.sh)
+
+**Security Note:** Like direnv, `.envrc` files must be explicitly allowed using `envy allow .envrc` before execution to prevent malicious code execution.
+
+**Example `.envrc` file:**
+```bash
+# Add custom paths
+PATH_add bin
+PATH_add scripts
+
+# Set project-specific variables
+export PROJECT_ROOT=$PWD
+export NODE_ENV=development
+
+# Use layout helpers
+layout node
+```
+
 ## Command-line Options
 
 ```

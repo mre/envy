@@ -5,6 +5,9 @@ mod hooks;
 mod opt;
 mod settings;
 
+#[cfg(feature = "bash-support")]
+mod bash;
+
 use clap::Parser;
 use std::path::{Path, PathBuf};
 use std::process;
@@ -236,8 +239,41 @@ fn export(shell: String) -> Result<()> {
 
     // Add variables from env files
     for env_file in settings.matching_env_files(&current_dir) {
-        let file_env_vars = get_env_vars_from_file(&env_file)?;
-        all_env_vars.extend(file_env_vars);
+        #[cfg(feature = "bash-support")]
+        {
+            if bash::is_envrc_file(&env_file) {
+                // Check if bash is available before processing .envrc files
+                if !bash::is_bash_available() {
+                    eprintln!(
+                        "Warning: Bash not available, skipping .envrc file: {}",
+                        env_file.display()
+                    );
+                } else {
+                    // Process .envrc files with bash
+                    match bash::process_envrc(&env_file, &current_dir) {
+                        Ok(env_vars) => {
+                            for (key, value) in env_vars {
+                                all_env_vars.push(format!("{key}={value}"));
+                            }
+                        }
+                        Err(e) => {
+                            eprintln!(
+                                "Warning: Failed to process .envrc file {env_file}: {e}",
+                                env_file = env_file.display(),
+                            );
+                        }
+                    }
+                }
+            } else {
+                let file_env_vars = get_env_vars_from_file(&env_file)?;
+                all_env_vars.extend(file_env_vars);
+            }
+        }
+        #[cfg(not(feature = "bash-support"))]
+        {
+            let file_env_vars = get_env_vars_from_file(&env_file)?;
+            all_env_vars.extend(file_env_vars);
+        }
     }
 
     match shell.as_ref() {

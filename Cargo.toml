@@ -30,6 +30,10 @@ toml = "0.8"
 [dev-dependencies]
 tempfile = "3.21"
 
+[features]
+default = []
+bash-support = []
+
 [workspace.lints.clippy]
 all = "warn"
 pedantic = "warn"
