@@ -65,7 +65,10 @@ fn create_extraction_script(envrc_path: &Path) -> Result<String> {
         .context("Invalid path encoding for .envrc file")?;
 
     // Create a script that includes the full direnv stdlib and executes the .envrc
-    let direnv_stdlib = include_str!("../include/direnv_stdlib.sh");
+    let direnv_stdlib = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/include/direnv_stdlib.sh"
+    ));
     Ok(format!(
         r#"{direnv_stdlib}
 
