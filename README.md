@@ -114,9 +114,10 @@ cargo build --features bash-support
 
 **Features included:**
 - Execute `.envrc` files as bash scripts via subprocess
-- Support for direnv stdlib functions: `PATH_add`, `dotenv`, `layout`, `use`, etc.
+- Complete direnv stdlib support: `PATH_add`, `dotenv`, `layout`, `use`, etc.
 - Secure execution model requiring explicit file approval
 - Full compatibility with existing direnv `.envrc` files
+- Uses the official direnv stdlib from [direnv/direnv](https://github.com/direnv/direnv/blob/5ffdaec7eed3ac7d6bdfe2dd098437233c78d0dc/stdlib.sh)
 
 **Security Note:** Like direnv, `.envrc` files must be explicitly allowed using `envy allow .envrc` before execution to prevent malicious code execution.
 

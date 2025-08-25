@@ -64,121 +64,17 @@ fn create_extraction_script(envrc_path: &Path) -> Result<String> {
         .to_str()
         .context("Invalid path encoding for .envrc file")?;
 
-    // Create a script that includes direnv stdlib functions and executes the .envrc
+    // Create a script that includes the full direnv stdlib and executes the .envrc
+    let direnv_stdlib = include_str!("../include/direnv_stdlib.sh");
     Ok(format!(
-        r#"
-# Direnv stdlib functions (simplified versions)
-PATH_add() {{
-    if [[ ":$PATH:" != *":$1:"* ]]; then
-        export PATH="$1:$PATH"
-    fi
-}}
-
-path_add() {{
-    local var_name="$1"
-    local new_path="$2"
-    local current_value
-    current_value=$(eval echo \$$var_name)
-    if [[ ":$current_value:" != *":$new_path:"* ]]; then
-        export "$var_name"="$new_path:$current_value"
-    fi
-}}
-
-dotenv() {{
-    local env_file="${{1:-.env}}"
-    if [[ -f "$env_file" ]]; then
-        set -o allexport
-        source "$env_file"
-        set +o allexport
-    fi
-}}
-
-dotenv_if_exists() {{
-    local env_file="${{1:-.env}}"
-    if [[ -f "$env_file" ]]; then
-        dotenv "$env_file"
-    fi
-}}
-
-expand_path() {{
-    echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
-}}
-
-has() {{
-    command -v "$1" >/dev/null 2>&1
-}}
-
-find_up() {{
-    local file="$1"
-    local dir="$PWD"
-    while [[ "$dir" != "/" ]]; do
-        if [[ -f "$dir/$file" ]]; then
-            echo "$dir/$file"
-            return 0
-        fi
-        dir=$(dirname "$dir")
-    done
-    return 1
-}}
-
-source_up() {{
-    local envrc_file
-    envrc_file=$(find_up .envrc)
-    if [[ -n "$envrc_file" && "$envrc_file" != "$PWD/.envrc" ]]; then
-        source "$envrc_file"
-    fi
-}}
-
-source_env() {{
-    if [[ -f "$1" ]]; then
-        source "$1"
-    fi
-}}
-
-# Layout functions (basic versions)
-layout() {{
-    case "$1" in
-        python|python3)
-            if has python3; then
-                export VIRTUAL_ENV="$PWD/.venv"
-                export PATH="$VIRTUAL_ENV/bin:$PATH"
-            fi
-            ;;
-        node|nodejs)
-            if [[ -d node_modules/.bin ]]; then
-                PATH_add node_modules/.bin
-            fi
-            ;;
-        go)
-            if [[ -f go.mod ]]; then
-                export GOPATH="$PWD/.go"
-                PATH_add "$GOPATH/bin"
-            fi
-            ;;
-    esac
-}}
-
-use() {{
-    # Simplified version - in real implementation would handle version managers
-    case "$1" in
-        python|python3)
-            layout python3
-            ;;
-        node|nodejs)
-            layout node
-            ;;
-        go)
-            layout go
-            ;;
-    esac
-}}
+        r#"{direnv_stdlib}
 
 # Store initial environment in a temporary file
 initial_env_file=$(mktemp)
 env > "$initial_env_file"
 
 # Source the .envrc file
-source "{}"
+source "{envrc_str}"
 
 # Output environment variables that changed
 echo "=== ENVY_ENV_START ==="
@@ -193,7 +89,6 @@ echo "=== ENVY_ENV_END ==="
 # Clean up
 rm -f "$initial_env_file"
 "#,
-        envrc_str
     ))
 }
 
@@ -244,7 +139,11 @@ pub fn is_bash_available() -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(feature = "bash-support")]
     use std::fs;
+
+    #[cfg(feature = "bash-support")]
     use tempfile::TempDir;
 
     #[test]
