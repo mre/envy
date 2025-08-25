@@ -154,6 +154,7 @@ mod tests {
         assert!(!is_envrc_file(Path::new("envrc")));
     }
 
+    #[cfg(all(test, unix, feature = "bash-support"))]
     #[test]
     fn test_bash_available() {
         // This should pass on most Unix systems
