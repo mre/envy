@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Source: https://github.com/direnv/direnv/blob/5ffdaec7eed3ac7d6bdfe2dd098437233c78d0dc/stdlib.sh
+#
 # These are the commands available in an .envrc context
 #
 # ShellCheck exceptions:
