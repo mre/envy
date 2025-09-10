@@ -28,7 +28,7 @@ directories = "6.0"
 toml = "0.8"
 
 [dev-dependencies]
-tempfile = "3.21"
+tempfile = "3.22"
 
 [features]
 default = []
